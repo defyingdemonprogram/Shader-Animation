@@ -29,7 +29,7 @@ static Plug *p = NULL;
 
 static void load_resources(void) {
     p->font = LoadFontEx("./assets/fonts/iosevka-regular.ttf", FONT_SIZE, NULL, 0);
-    p->shader = LoadShader(0, "./assets/shader/example.fs");
+    p->shader = LoadShader(0, "./assets/shaders/example.fs");
     p->timeLoc = GetShaderLocation(p->shader, "u_time");
 }
 

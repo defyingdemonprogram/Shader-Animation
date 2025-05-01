@@ -11,8 +11,8 @@
 #include "plug.h"
 #include "ffmpeg.h"
 
-#define RENDER_WIDTH 1920
-#define RENDER_HEIGHT 1080
+#define RENDER_WIDTH 1920*2
+#define RENDER_HEIGHT 1080*2
 #define RENDER_FPS 60
 #define RENDER_DELTA_TIME (1.0f/RENDER_FPS)
 #define RENDERING_FONT_SIZE 78

@@ -26,6 +26,7 @@ bool build_plug_c(bool force, Nob_Cmd *cmd, const char *source_path, const char 
 		cc(cmd);
 		nob_cmd_append(cmd, "-fPIC", "-shared", "-Wl,--no-undefined");
 		nob_cmd_append(cmd, "-o", output_path);
+		nob_cmd_append(cmd, source_path);
 		libs(cmd);
 		return nob_cmd_run_sync(*cmd);
 	}
@@ -81,6 +82,7 @@ int main(int argc, char **argv) {
 	Nob_Cmd cmd = {0};
 	if (!build_plug_c(force, &cmd, SRC_DIR"/example.c", BUILD_DIR"libexample.so")) return 1;
     if (!build_plug_c(force, &cmd, SRC_DIR"/growin.c", BUILD_DIR"libgrowin.so")) return 1;
+	if (!build_main(force, &cmd)) return 1;
 
 	// cmd.count = 0;
 	// nob_cmd_append(&cmd, BUILD_DIR"main", BUILD_DIR"libexample.so");

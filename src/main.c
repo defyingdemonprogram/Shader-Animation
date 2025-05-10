@@ -11,10 +11,10 @@
 #include "plug.h"
 #include "ffmpeg.h"
 
-#define RENDER_WIDTH 1920*2
-#define RENDER_HEIGHT 1080*2
-#define RENDER_FPS 60
-#define RENDER_DELTA_TIME (1.0f/RENDER_FPS)
+#define FFMPEG_VIDEO_WIDTH (1920*2)
+#define FFMPEG_VIDEO_HEIGHT (1080*2)
+#define FFMPEG_VIDEO_FPS 60
+#define FFMPEG_VIDEO_DELTA_TIME (1.0f/FFMPEG_VIDEO_FPS)
 #define RENDERING_FONT_SIZE 78
 
 // The state of Panim Engine
@@ -123,18 +123,18 @@ int main(int argc, char **argv) {
 
     float scale_factor = 100.0f;
     SetConfigFlags(FLAG_MSAA_4X_HINT | FLAG_WINDOW_RESIZABLE);
-    InitWindow(16*scale_factor, 9*scale_factor, "Panim");
+    InitWindow(16*scale_factor, 9*scale_factor, "Shader Animation");
     InitAudioDevice();
     SetTargetFPS(60);
     SetExitKey(KEY_NULL);
     plug_init();
 
-    screen = LoadRenderTexture(RENDER_WIDTH, RENDER_HEIGHT);
+    screen = LoadRenderTexture(FFMPEG_VIDEO_WIDTH, FFMPEG_VIDEO_HEIGHT);
     rendering_font = LoadFontEx("./assets/fonts/Vollkorn-Regular.ttf", RENDERING_FONT_SIZE, NULL, 0);
 
     while (!WindowShouldClose()) {
-        if (IsKeyPressed(KEY_K)) {
-            TraceLog(LOG_INFO, "Exiting on K press");
+        if (IsKeyPressed(KEY_Q)) {
+            TraceLog(LOG_INFO, "Exiting on Q press");
             break;
         }
         
@@ -146,7 +146,7 @@ int main(int argc, char **argv) {
                     finish_ffmpeg_rendering(false);
                 } else {
                     BeginTextureMode(screen);
-                    plug_update(RENDER_DELTA_TIME, RENDER_WIDTH, RENDER_HEIGHT, true);
+                    plug_update(FFMPEG_VIDEO_DELTA_TIME, FFMPEG_VIDEO_WIDTH, FFMPEG_VIDEO_HEIGHT, true);
                     EndTextureMode();
 
                     Image image = LoadImageFromTexture(screen.texture);
@@ -159,7 +159,7 @@ int main(int argc, char **argv) {
             } else {
                 if (IsKeyPressed(KEY_R)) {
                     SetTraceLogLevel(LOG_WARNING);
-                    ffmpeg = ffmpeg_start_rendering(RENDER_WIDTH, RENDER_HEIGHT, RENDER_FPS);
+                    ffmpeg = ffmpeg_start_rendering(FFMPEG_VIDEO_WIDTH, FFMPEG_VIDEO_HEIGHT, FFMPEG_VIDEO_FPS);
                     plug_reset();
                 } else {
                     if (IsKeyPressed(KEY_H)) {
@@ -172,9 +172,27 @@ int main(int argc, char **argv) {
                         paused = !paused;
                     }
 
-                    if (IsKeyPressed(KEY_Q)) {
+                    if (IsKeyPressed(KEY_B)) {
                         plug_reset();
                     }
+
+                    if (IsKeyPressed(KEY_S)) {
+                        TakeScreenshot("shader_screenshot.png");
+                        TraceLog(LOG_INFO, "Shader screensshot saved as shader_screenshot.png");
+                    }
+
+                    if (IsKeyPressed(KEY_C)) {
+                        // First, render to the screen texture
+                        BeginTextureMode(screen);
+                        plug_update(paused ? 0.0f : GetFrameTime(), FFMPEG_VIDEO_WIDTH, FFMPEG_VIDEO_HEIGHT, true);
+                        EndTextureMode();
+
+                        Image highres_image = LoadImageFromTexture(screen.texture);
+                        ExportImage(highres_image, "shader_highres_capture.png");
+                        UnloadImage(highres_image);
+                        TraceLog(LOG_INFO, "High-resolution capture saved as shader_highres_capture.png");
+                    }
+                    
                     plug_update(paused ? 0.0f : GetFrameTime(), GetScreenWidth(), GetScreenHeight(), false);
                 }
             }
@@ -183,4 +201,3 @@ int main(int argc, char **argv) {
     CloseWindow();
     return 0;
 }
-

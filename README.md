@@ -16,11 +16,15 @@ To run a shader:
 ./build/main ./build/libexample.so
 ```
 
-### Key Bindings  
-- <kbd>K</kbd> — Kill the application  
-- <kbd>H</kbd> — Hot-reload the shader  
-- <kbd>R</kbd> — Start video rendering  
-- <kbd>Esc</kbd> — Exit rendering mode  
+### Key Bindings
+* <kbd>Q</kbd> — Exit the application
+* <kbd>H</kbd> — Reload the shader (hot-reload)
+* <kbd>B</kbd> — Restart shader animation (“Begin Again the Shader”)
+* <kbd>S</kbd> — Take a screenshot of the current window
+* <kbd>C</kbd> — Capture a high-quality frame from the render window
+* <kbd>R</kbd> — Begin video rendering
+* <kbd>Esc</kbd> — Stop rendering mode and return to normal view
+
 
 ### References  
 - Inspired by examples from [ShaderToy](https://www.shadertoy.com/)

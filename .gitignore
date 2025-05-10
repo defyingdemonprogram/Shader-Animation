@@ -1,6 +1,8 @@
 nob
 nob.old
+deleteme.c
 
 build/
 
 *mp4
+*.png

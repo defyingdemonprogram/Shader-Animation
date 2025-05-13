@@ -58,12 +58,13 @@ FFMPEG *ffmpeg_start_rendering(size_t width, size_t height, size_t fps) {
             "-s", resolution,
             "-r", framerate,
             "-i", "-",
-
+            "-r", framerate,
             "-c:v", "libx264",
             "-vb", "2500k",
             "-c:a", "aac",
             "-ab", "200k",
             "-pix_fmt", "yuv420p",
+            "-crf", "18", "-preset", "veryfast",
             "output.mp4",
 
             NULL

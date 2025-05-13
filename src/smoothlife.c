@@ -14,11 +14,11 @@
 
 #define FONT_SIZE 52
 #define BACKGROUND_COLOR ColorFromHSV(120, 1.0, 1 - 0.95)
-#define RENDER_WIDTH (1920 * 2)
-#define RENDER_HEIGHT (1080 * 2)
+#define RENDER_WIDTH (1920)
+#define RENDER_HEIGHT (1080)
 #define TEXTURE_WIDTH (RENDER_WIDTH / 6)
 #define TEXTURE_HEIGHT (RENDER_HEIGHT / 6)
-#define RENDER_FPS 10
+#define RENDER_FPS 30
 #define RENDER_DELTA_TIME (1.0f / RENDER_FPS)
 
 typedef struct {
@@ -188,12 +188,12 @@ void plug_update(float dt, float w, float h) {
     // ClearBackground(BACKGROUND_COLOR);
     float smoothLifedt = (dt <= FLT_EPSILON) ? 0.0f : RENDER_DELTA_TIME;
     p->time += dt;
+    printf("Time: %f\n", smoothLifedt);
 
     float slResolution[2] = { (float)TEXTURE_WIDTH, (float)TEXTURE_HEIGHT };
 
     // Run simulation shader
     BeginTextureMode(p->state[1 - p->currentState]);
-        ClearBackground(BLANK);
         BeginShaderMode(p->sl.shader);
             // Set shader inputs
             SetShaderValueTexture(p->sl.shader, p->sl.texture0Loc, p->state[p->currentState].texture);
@@ -207,10 +207,11 @@ void plug_update(float dt, float w, float h) {
     p->currentState = 1 - p->currentState;
 
     // Draw to screen
-    ClearBackground(BACKGROUND_COLOR);
+    // ClearBackground(BACKGROUND_COLOR);
     float scale = MIN(w / TEXTURE_WIDTH, h / TEXTURE_HEIGHT);
     Vector2 offset = { (w - TEXTURE_WIDTH * scale) / 2.0f, (h - TEXTURE_HEIGHT * scale) / 2.0f };
-    DrawTextureEx(p->state[p->currentState].texture, offset, 0.0f, scale, WHITE);
+    DrawTextureEx(p->state[1 - p->currentState].texture, offset, 0.0f, scale, WHITE);
+    // DrawTextureEx(p->state[p->currentState].texture, (Vector2){0, 0}, 0.0f, w / TEXTURE_WIDTH, WHITE);
 
     // Overlay info text
     float padding = 10;

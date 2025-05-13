@@ -11,8 +11,8 @@
 #include "plug.h"
 #include "ffmpeg.h"
 
-#define FFMPEG_VIDEO_WIDTH (1920*2)
-#define FFMPEG_VIDEO_HEIGHT (1080*2)
+#define FFMPEG_VIDEO_WIDTH (1920)
+#define FFMPEG_VIDEO_HEIGHT (1080)
 #define FFMPEG_VIDEO_FPS 60
 #define FFMPEG_VIDEO_DELTA_TIME (1.0f/FFMPEG_VIDEO_FPS)
 #define RENDERING_FONT_SIZE 78
@@ -186,14 +186,22 @@ int main(int argc, char **argv) {
                         BeginTextureMode(screen);
                         plug_update(paused ? 0.0f : GetFrameTime(), FFMPEG_VIDEO_WIDTH, FFMPEG_VIDEO_HEIGHT, true);
                         EndTextureMode();
+                        // DrawTextureEx(screen.texture, (Vector2){0, 0}, 0.0f, 1.0f, WHITE);
 
                         Image highres_image = LoadImageFromTexture(screen.texture);
+                        ImageFlipVertical(&highres_image);
                         ExportImage(highres_image, "shader_highres_capture.png");
                         UnloadImage(highres_image);
                         TraceLog(LOG_INFO, "High-resolution capture saved as shader_highres_capture.png");
                     }
                     
                     plug_update(paused ? 0.0f : GetFrameTime(), GetScreenWidth(), GetScreenHeight(), false);
+//                     BeginTextureMode(screen);
+//                         plug_update(0.2f, FFMPEG_VIDEO_WIDTH, FFMPEG_VIDEO_HEIGHT, true);
+//                         Image state_image = LoadImageFromTexture(screen.texture);
+// ExportImage(state_image, "state_texture.png");
+// UnloadImage(state_image);
+//                         EndTextureMode();
                 }
             }
         EndDrawing();

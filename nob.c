@@ -83,6 +83,7 @@ int main(int argc, char **argv) {
 	if (!build_plug_c(force, &cmd, SRC_DIR"/example.c", BUILD_DIR"libexample.so")) return 1;
     if (!build_plug_c(force, &cmd, SRC_DIR"/growin.c", BUILD_DIR"libgrowin.so")) return 1;
 	if (!build_plug_c(force, &cmd, SRC_DIR"/smoothlife.c", BUILD_DIR"libsmoothlife.so")) return 1;
+	if (!build_plug_c(force, &cmd, SRC_DIR"/tunnelcylinder.c", BUILD_DIR"libtunnelcylinder.so")) return 1;
 	if (!build_main(force, &cmd)) return 1;
 
 	// cmd.count = 0;

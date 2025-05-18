@@ -1,3 +1,8 @@
+// NOTE(Realsanjeev): Rendering into FFMPEG doesnot work in main for this
+// The parameter that controls the smoothlife animation are:
+//  - DELTA_TIME
+//  - TEXTURE_WIDTH
+//  - TEXTURE_HEIGHT
 #include <stdlib.h>
 #include <assert.h>
 #include <string.h>
@@ -16,10 +21,9 @@
 #define BACKGROUND_COLOR ColorFromHSV(120, 1.0, 1 - 0.95)
 #define RENDER_WIDTH (1920)
 #define RENDER_HEIGHT (1080)
-#define TEXTURE_WIDTH (RENDER_WIDTH / 6)
-#define TEXTURE_HEIGHT (RENDER_HEIGHT / 6)
-#define RENDER_FPS 30
-#define RENDER_DELTA_TIME (1.0f / RENDER_FPS)
+#define TEXTURE_WIDTH (RENDER_WIDTH / 2)
+#define TEXTURE_HEIGHT (RENDER_HEIGHT / 2)
+#define DELTA_TIME (0.5f)
 
 typedef struct {
     Font font;
@@ -85,8 +89,9 @@ static void load_resources(void) {
         TraceLog(LOG_WARNING, "SHADER: [info.fs] Uniform 'u_origin' not found");
     }
 
-    // Image image = GenImageColor(TEXTURE_WIDTH, TEXTURE_HEIGHT, WHITE);
     Image image = GenImagePerlinNoise(TEXTURE_WIDTH, TEXTURE_HEIGHT, 0, 0, 2.0f);
+    // Image image = GenImageWhiteNoise(TEXTURE_WIDTH, TEXTURE_HEIGHT, 2.0f);
+    // Image image = GenImageColor(TEXTURE_WIDTH, TEXTURE_HEIGHT, WHITE);
     // generateNoiseImage(&image);
 
     p->state[0] = LoadRenderTexture(TEXTURE_WIDTH, TEXTURE_HEIGHT);
@@ -186,9 +191,8 @@ void DrawWrappedText(const Font font, const char *text, Rectangle bounds, float 
 
 void plug_update(float dt, float w, float h) {
     // ClearBackground(BACKGROUND_COLOR);
-    float smoothLifedt = (dt <= FLT_EPSILON) ? 0.0f : RENDER_DELTA_TIME;
+    float smoothLifedt = (dt <= FLT_EPSILON) ? 0.0f : DELTA_TIME;
     p->time += dt;
-    printf("Time: %f\n", smoothLifedt);
 
     float slResolution[2] = { (float)TEXTURE_WIDTH, (float)TEXTURE_HEIGHT };
 
@@ -207,11 +211,10 @@ void plug_update(float dt, float w, float h) {
     p->currentState = 1 - p->currentState;
 
     // Draw to screen
-    // ClearBackground(BACKGROUND_COLOR);
+    ClearBackground(BACKGROUND_COLOR);
     float scale = MIN(w / TEXTURE_WIDTH, h / TEXTURE_HEIGHT);
     Vector2 offset = { (w - TEXTURE_WIDTH * scale) / 2.0f, (h - TEXTURE_HEIGHT * scale) / 2.0f };
     DrawTextureEx(p->state[1 - p->currentState].texture, offset, 0.0f, scale, WHITE);
-    // DrawTextureEx(p->state[p->currentState].texture, (Vector2){0, 0}, 0.0f, w / TEXTURE_WIDTH, WHITE);
 
     // Overlay info text
     float padding = 10;

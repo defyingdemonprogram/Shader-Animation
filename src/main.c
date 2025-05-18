@@ -11,8 +11,8 @@
 #include "plug.h"
 #include "ffmpeg.h"
 
-#define FFMPEG_VIDEO_WIDTH (1920)
-#define FFMPEG_VIDEO_HEIGHT (1080)
+#define FFMPEG_VIDEO_WIDTH (1920*2)
+#define FFMPEG_VIDEO_HEIGHT (1080*2)
 #define FFMPEG_VIDEO_FPS 60
 #define FFMPEG_VIDEO_DELTA_TIME (1.0f/FFMPEG_VIDEO_FPS)
 #define RENDERING_FONT_SIZE 78
@@ -124,7 +124,6 @@ int main(int argc, char **argv) {
     float scale_factor = 100.0f;
     SetConfigFlags(FLAG_MSAA_4X_HINT | FLAG_WINDOW_RESIZABLE);
     InitWindow(16*scale_factor, 9*scale_factor, "Shader Animation");
-    InitAudioDevice();
     SetTargetFPS(60);
     SetExitKey(KEY_NULL);
     plug_init();
@@ -140,9 +139,7 @@ int main(int argc, char **argv) {
         
         BeginDrawing();
             if (ffmpeg) {
-                if (plug_finished()) {
-                    finish_ffmpeg_rendering(false);
-                } else if (IsKeyPressed(KEY_ESCAPE)) {
+                if (plug_finished() || IsKeyPressed(KEY_ESCAPE)) {
                     finish_ffmpeg_rendering(false);
                 } else {
                     BeginTextureMode(screen);
@@ -206,6 +203,8 @@ int main(int argc, char **argv) {
             }
         EndDrawing();
     }
+    UnloadRenderTexture(screen);
+    UnloadFont(rendering_font);
     CloseWindow();
     return 0;
 }

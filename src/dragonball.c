@@ -12,22 +12,28 @@
 
 typedef struct {
     Shader shader;
-    const char *text;
     int timeLoc;
     int resolutionLoc;
     int originLoc;
+
+    const char *text;
+    size_t fontSize;
+    float padding;
+    Rectangle textBounds;
 } Info;
 
 typedef struct {
     Shader shader;
     int timeLoc;
     int resolutionLoc;
-} TunnelCylinder;
+    int textureLoc;
+    Texture2D envTexture;
+} DragonBall;
 
 typedef struct {
     Font font;
     
-    TunnelCylinder tc;
+    DragonBall db;
     float time;
     Info info;
     size_t size;
@@ -37,9 +43,13 @@ static Plug *p = NULL;
 
 static void load_resources(void) {
     p->font = LoadFontEx("./assets/fonts/iosevka-regular.ttf", FONT_SIZE, NULL, 0);
-    p->tc.shader = LoadShader(0, "./assets/shaders/tunnelCylinders.fs");
-    p->tc.timeLoc = GetShaderLocation(p->tc.shader, "time");
-    p->tc.resolutionLoc = GetShaderLocation(p->tc.shader, "resolution");
+    p->db.shader = LoadShader(0, "./assets/shaders/dragonball.fs");
+    p->db.timeLoc = GetShaderLocation(p->db.shader, "time");
+    p->db.resolutionLoc = GetShaderLocation(p->db.shader, "resolution");
+    p->db.textureLoc = GetShaderLocation(p->db.shader, "texture1");
+
+    // Load environment
+    p->db.envTexture = LoadTexture("./assets/textures/environment.png");
 
     p->info.shader = LoadShader(0, "./assets/shaders/info.fs");
     p->info.timeLoc = GetShaderLocation(p->info.shader, "u_time");
@@ -54,7 +64,8 @@ static void load_resources(void) {
 
 static void unload_resources(void) {
     UnloadFont(p->font);
-    UnloadShader(p->tc.shader);
+    UnloadShader(p->db.shader);
+    UnloadTexture(p->db.envTexture);
     UnloadShader(p->info.shader);
 }
 
@@ -128,40 +139,69 @@ void DrawWrappedText(Font font, const char *text, Rectangle bounds, float fontSi
     }
 }
 
-void plug_update(float dt, float w, float h) {
+void plug_update(float dt, float w, float h, bool  render) {
     ClearBackground(BACKGROUND_COLOR);
     p->time += dt;
 
     float resolution[2] = {w, h};
 
     // Main shader
-    BeginShaderMode(p->tc.shader);
-        SetShaderValue(p->tc.shader, p->tc.timeLoc, &p->time, SHADER_UNIFORM_FLOAT);
-        SetShaderValue(p->tc.shader, p->tc.resolutionLoc, resolution, SHADER_UNIFORM_VEC2);
-        DrawRectangle(0, 0, w, h, WHITE);
+    BeginShaderMode(p->db.shader);
+        SetShaderValue(p->db.shader, p->db.timeLoc, &p->time, SHADER_UNIFORM_FLOAT);
+        SetShaderValue(p->db.shader, p->db.resolutionLoc, resolution, SHADER_UNIFORM_VEC2);
+        SetShaderValueTexture(p->db.shader, p->db.textureLoc, p->db.envTexture);
+
+        // Scale environment.png to screen dimensions
+        Rectangle src = { 0, 0, (float)p->db.envTexture.width, (float)p->db.envTexture.height };
+        Rectangle dest = { 0, 0, w, h };
+        Vector2 originDb = { 0, 0 };
+        DrawTexturePro(p->db.envTexture, src, dest, originDb, 0.0f, WHITE);
+
     EndShaderMode();
 
-    // Info shader
-    float padding = 10;
-    Rectangle textBounds = {
-        .x = w - 400 - padding,
-        .y = h - 100 - padding,
-        .width = 400,
-        .height = 100
-    };
+    // if (render) {
+    //     // Info shader
+    //     float p->info.padding = 10;
+    //     Rectangle p->info.textBounds = {
+    //         .x = w - 400 - p->info.padding,
+    //         .y = h - 100 - p->info.padding,
+    //         .width = 400,
+    //         .height = 100
+    //     };
+
+     // Info shader
+    if (!render) {
+        p->info.fontSize = FONT_SIZE / 2;
+        p->info.padding = 10;
+        p->info.textBounds = CLITERAL(Rectangle){
+            .x = w - 400 - p->info.padding,
+            .y = h - 100 - p->info.padding,
+            .width = 400,
+            .height = 100
+        };
+    } else {
+        p->info.fontSize = w / 70;
+        p->info.padding = w / 192;
+        p->info.textBounds = CLITERAL(Rectangle){
+            .x = w - w / 5 - p->info.padding,
+            .y = h - h / 11 - p->info.padding,
+            .width = w / 5,
+            .height = h / 11
+        };
+    }
 
     BeginShaderMode(p->info.shader);
-        float infoResolution[2] = {textBounds.width, textBounds.height};
-        float origin[2] = {textBounds.x + textBounds.height, h - (textBounds.y + textBounds.height)};
+        float infoResolution[2] = {p->info.textBounds.width, p->info.textBounds.height};
+        float origin[2] = {p->info.textBounds.x + p->info.textBounds.height, h - (p->info.textBounds.y + p->info.textBounds.height)};
 
         SetShaderValue(p->info.shader, p->info.timeLoc, &p->time, SHADER_UNIFORM_FLOAT);
         SetShaderValue(p->info.shader, p->info.resolutionLoc, infoResolution, SHADER_UNIFORM_VEC2);
         SetShaderValue(p->info.shader, p->info.originLoc, origin, SHADER_UNIFORM_VEC2);
-        DrawRectangleRec(textBounds, BLANK);
+        DrawRectangleRec(p->info.textBounds, BLANK);
     EndShaderMode();
 
     // Draw overlay text
-    DrawWrappedText(p->font, p->info.text, textBounds, FONT_SIZE / 2.0f, 2, RAYWHITE);
+    DrawWrappedText(p->font, p->info.text, p->info.textBounds, p->info.fontSize, 2, RAYWHITE);
 }
 
 bool plug_finished(void) {

@@ -85,6 +85,7 @@ int main(int argc, char **argv) {
 	if (!build_plug_c(force, &cmd, SRC_DIR"/smoothlife.c", BUILD_DIR"libsmoothlife.so")) return 1;
 	if (!build_plug_c(force, &cmd, SRC_DIR"/tunnelcylinder.c", BUILD_DIR"libtunnelcylinder.so")) return 1;
 	if (!build_plug_c(force, &cmd, SRC_DIR"/dragonball.c", BUILD_DIR"libdragonball.so")) return 1;
+	if (!build_plug_c(force, &cmd, SRC_DIR"/chain_spell.c", BUILD_DIR"libchainspell.so")) return 1;
 	if (!build_main(force, &cmd)) return 1;
 
 	// cmd.count = 0;

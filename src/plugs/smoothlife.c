@@ -11,6 +11,7 @@
 
 #include "raylib.h"
 #include "raymath.h"
+#include "rlgl.h"
 
 #include "nob.h"
 #include "ffmpeg.h"
@@ -203,6 +204,8 @@ void plug_update(float dt, float w, float h, bool  render) {
     float slResolution[2] = { (float)TEXTURE_WIDTH, (float)TEXTURE_HEIGHT };
 
     // Run simulation shader
+    unsigned int previousFbo = rlGetActiveFramebuffer();
+
     BeginTextureMode(p->state[1 - p->currentState]);
         BeginShaderMode(p->sl.shader);
             // Set shader inputs
@@ -212,6 +215,12 @@ void plug_update(float dt, float w, float h, bool  render) {
             DrawTexture(p->state[p->currentState].texture, 0, 0, WHITE);
         EndShaderMode();
     EndTextureMode();
+
+    // Restore state broken by EndTextureMode
+    rlEnableFramebuffer(previousFbo);
+    rlViewport(0, 0, (int)w, (int)h);
+
+
 
     // Swap states
     p->currentState = 1 - p->currentState;

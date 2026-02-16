@@ -149,23 +149,10 @@ void plug_update(float dt, float w, float h, bool  render) {
         SetShaderValue(p->db.shader, p->db.resolutionLoc, resolution, SHADER_UNIFORM_VEC2);
         SetShaderValueTexture(p->db.shader, p->db.textureLoc, p->db.envTexture);
 
-        // Scale environment.png to screen dimensions
-        Rectangle src = { 0, 0, (float)p->db.envTexture.width, (float)p->db.envTexture.height };
-        Rectangle dest = { 0, 0, w, h };
-        Vector2 originDb = { 0, 0 };
-        DrawTexturePro(p->db.envTexture, src, dest, originDb, 0.0f, WHITE);
-
+        // Draw a fullscreen rectangle to invoke the shader on all pixels
+        DrawRectangle(0, 0, (int)w, (int)h, WHITE);
     EndShaderMode();
 
-    // if (render) {
-    //     // Info shader
-    //     float p->info.padding = 10;
-    //     Rectangle p->info.textBounds = {
-    //         .x = w - 400 - p->info.padding,
-    //         .y = h - 100 - p->info.padding,
-    //         .width = 400,
-    //         .height = 100
-    //     };
 
      // Info shader
     if (!render) {

@@ -101,7 +101,8 @@ void DrawWrappedText(Font font, const char *text, Rectangle bounds, float fontSi
     }
 }
 
-void plug_update(float dt, float w, float h) {
+void plug_update(float dt, float w, float h, bool  render) {
+    (void)render;
     ClearBackground(BACKGROUND_COLOR);
     p->time += dt;
     BeginShaderMode(p->shader);

@@ -20,11 +20,11 @@
 #define FONT_SIZE 52
 #define BACKGROUND_COLOR ColorFromHSV(120, 1.0, 1 - 0.95)
 #ifdef INSTAGRAM_
-    #define RENDER_WIDTH (1920)
-    #define RENDER_HEIGHT (1080)
-#else
-    #define RENDER_HEIGHT (1920)
     #define RENDER_WIDTH (1080)
+    #define RENDER_HEIGHT (1920)
+#else
+    #define RENDER_HEIGHT (1080)
+    #define RENDER_WIDTH (1920)
 #endif // INSTAGRAM_
 #define TEXTURE_WIDTH (RENDER_WIDTH / 2)
 #define TEXTURE_HEIGHT (RENDER_HEIGHT / 2)
@@ -194,7 +194,8 @@ void DrawWrappedText(const Font font, const char *text, Rectangle bounds, float 
     }
 }
 
-void plug_update(float dt, float w, float h) {
+void plug_update(float dt, float w, float h, bool  render) {
+    (void)render;
     // ClearBackground(BACKGROUND_COLOR);
     float smoothLifedt = (dt <= FLT_EPSILON) ? 0.0f : DELTA_TIME;
     p->time += dt;

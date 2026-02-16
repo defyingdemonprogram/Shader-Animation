@@ -12,11 +12,11 @@
 #include "ffmpeg.h"
 
 #ifdef INSTAGRAM_
-    #define FFMPEG_VIDEO_WIDTH (1920*2)
-    #define FFMPEG_VIDEO_HEIGHT (1080*2)
+    #define FFMPEG_VIDEO_WIDTH 1080
+    #define FFMPEG_VIDEO_HEIGHT 1920
 #else
-    #define FFMPEG_VIDEO_WIDTH (1080)
-    #define FFMPEG_VIDEO_HEIGHT (1920)
+    #define FFMPEG_VIDEO_WIDTH 1920
+    #define FFMPEG_VIDEO_HEIGHT 1080
 #endif // INSTAGRAM_
 #define FFMPEG_VIDEO_FPS 60
 #define FFMPEG_VIDEO_DELTA_TIME (1.0f/FFMPEG_VIDEO_FPS)
@@ -128,7 +128,11 @@ int main(int argc, char **argv) {
 
     float scale_factor = 100.0f;
     SetConfigFlags(FLAG_MSAA_4X_HINT | FLAG_WINDOW_RESIZABLE);
+#ifdef INSTAGRAM_
+    InitWindow(9*scale_factor, 16*scale_factor, "Shader Animation");
+#else
     InitWindow(16*scale_factor, 9*scale_factor, "Shader Animation");
+#endif
     SetTargetFPS(60);
     SetExitKey(KEY_NULL);
     plug_init();

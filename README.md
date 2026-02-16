@@ -29,3 +29,4 @@ To run a shader:
 ### References  
 - Inspired by examples from [ShaderToy](https://www.shadertoy.com/)
 - [Palettes - Shader](https://iquilezles.org/articles/palettes/)
+- [Typing Sound - Pixabay](https://pixabay.com/sound-effects/search/typing/)

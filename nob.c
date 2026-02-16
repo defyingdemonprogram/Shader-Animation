@@ -86,6 +86,7 @@ int main(int argc, char **argv) {
 
 	Nob_Cmd cmd = {0};
 	if (!build_plug_c(force, &cmd, PLUGS_DIR"/example.c", BUILD_DIR"libexample.so")) return 1;
+	if (!build_plug_c(force, &cmd, PLUGS_DIR"/typing.c", BUILD_DIR"libtyping.so")) return 1;
     if (!build_plug_c(force, &cmd, PLUGS_DIR"/growin.c", BUILD_DIR"libgrowin.so")) return 1;
 	if (!build_plug_c(force, &cmd, PLUGS_DIR"/smoothlife.c", BUILD_DIR"libsmoothlife.so")) return 1;
 	if (!build_plug_c(force, &cmd, PLUGS_DIR"/tunnelcylinder.c", BUILD_DIR"libtunnelcylinder.so")) return 1;
@@ -93,8 +94,8 @@ int main(int argc, char **argv) {
 	if (!build_plug_c(force, &cmd, PLUGS_DIR"/chain_spell.c", BUILD_DIR"libchainspell.so")) return 1;
 	if (!build_main(force, &cmd)) return 1;
 
-	// cmd.count = 0;
-	// nob_cmd_append(&cmd, BUILD_DIR"main", BUILD_DIR"libexample.so");
-	// if (nob_cmd_run_sync(cmd)) return 1;
+	cmd.count = 0;
+	nob_cmd_append(&cmd, BUILD_DIR"main", BUILD_DIR"libtyping.so");
+	if (nob_cmd_run_sync(cmd)) return 1;
 	return 0;
 }

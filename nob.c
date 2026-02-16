@@ -1,14 +1,18 @@
 #define NOB_IMPLEMENTATION
-#include "./src/nob.h"
+#include "./vendor/nob.h"
 
 #define BUILD_DIR "./build/"
-#define SRC_DIR "./src"
+#define CORE_DIR "./src/core"
+#define PLUGS_DIR "./src/plugs"
+#define VENDOR_DIR "./vendor"
 
 void cc(Nob_Cmd *cmd) {
     nob_cmd_append(cmd, "cc");
 	nob_cmd_append(cmd, "-DINSTAGRAM_");
     nob_cmd_append(cmd, "-Wall", "-Wextra", "-ggdb");
     nob_cmd_append(cmd, "-I./raylib/raylib-5.5_linux_amd64/include");
+    nob_cmd_append(cmd, "-I"VENDOR_DIR);
+    nob_cmd_append(cmd, "-I"CORE_DIR);
 }
 
 void libs(Nob_Cmd *cmd) {
@@ -39,8 +43,8 @@ bool build_plug_c(bool force, Nob_Cmd *cmd, const char *source_path, const char 
 bool build_main(bool force, Nob_Cmd *cmd) {
 	const char *output_path = BUILD_DIR"main";
 	const char *input_paths[] = {
-		SRC_DIR"/main.c",
-		SRC_DIR"/ffmpeg_linux.c"
+		CORE_DIR"/main.c",
+		CORE_DIR"/ffmpeg_linux.c"
 	};
 	size_t input_paths_len = NOB_ARRAY_LEN(input_paths);
 
@@ -81,12 +85,12 @@ int main(int argc, char **argv) {
 	if (!nob_mkdir_if_not_exists(BUILD_DIR)) return 1;
 
 	Nob_Cmd cmd = {0};
-	if (!build_plug_c(force, &cmd, SRC_DIR"/example.c", BUILD_DIR"libexample.so")) return 1;
-    if (!build_plug_c(force, &cmd, SRC_DIR"/growin.c", BUILD_DIR"libgrowin.so")) return 1;
-	if (!build_plug_c(force, &cmd, SRC_DIR"/smoothlife.c", BUILD_DIR"libsmoothlife.so")) return 1;
-	if (!build_plug_c(force, &cmd, SRC_DIR"/tunnelcylinder.c", BUILD_DIR"libtunnelcylinder.so")) return 1;
-	if (!build_plug_c(force, &cmd, SRC_DIR"/dragonball.c", BUILD_DIR"libdragonball.so")) return 1;
-	if (!build_plug_c(force, &cmd, SRC_DIR"/chain_spell.c", BUILD_DIR"libchainspell.so")) return 1;
+	if (!build_plug_c(force, &cmd, PLUGS_DIR"/example.c", BUILD_DIR"libexample.so")) return 1;
+    if (!build_plug_c(force, &cmd, PLUGS_DIR"/growin.c", BUILD_DIR"libgrowin.so")) return 1;
+	if (!build_plug_c(force, &cmd, PLUGS_DIR"/smoothlife.c", BUILD_DIR"libsmoothlife.so")) return 1;
+	if (!build_plug_c(force, &cmd, PLUGS_DIR"/tunnelcylinder.c", BUILD_DIR"libtunnelcylinder.so")) return 1;
+	if (!build_plug_c(force, &cmd, PLUGS_DIR"/dragonball.c", BUILD_DIR"libdragonball.so")) return 1;
+	if (!build_plug_c(force, &cmd, PLUGS_DIR"/chain_spell.c", BUILD_DIR"libchainspell.so")) return 1;
 	if (!build_main(force, &cmd)) return 1;
 
 	// cmd.count = 0;

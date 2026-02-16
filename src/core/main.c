@@ -179,8 +179,8 @@ int main(int argc, char **argv) {
                     }
 
                     if (IsKeyPressed(KEY_S)) {
-                        TakeScreenshot("shader_screenshot.png");
-                        TraceLog(LOG_INFO, "Shader screensshot saved as shader_screenshot.png");
+                        TakeScreenshot("screenshots/shader_screenshot.png");
+                        TraceLog(LOG_INFO, "Shader screensshot saved as screenshots/shader_screenshot.png");
                     }
 
                     if (IsKeyPressed(KEY_C)) {
@@ -192,7 +192,7 @@ int main(int argc, char **argv) {
 
                         Image highres_image = LoadImageFromTexture(screen.texture);
                         ImageFlipVertical(&highres_image);
-                        ExportImage(highres_image, "shader_highres_capture.png");
+                        ExportImage(highres_image, "screenshots/shader_highres_capture.png");
                         UnloadImage(highres_image);
                         TraceLog(LOG_INFO, "High-resolution capture saved as shader_highres_capture.png");
                     }

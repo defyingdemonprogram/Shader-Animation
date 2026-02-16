@@ -10,8 +10,6 @@
 
 #define FONT_SIZE 52
 #define BACKGROUND_COLOR ColorFromHSV(120, 1.0, 1 - 0.95)
-#define RENDER_WIDTH (1920 * 2)
-#define RENDER_HEIGHT (1080 * 2)
 #define RENDER_FPS 60
 #define RENDER_DELTA_TIME (1.0f / RENDER_FPS)
 

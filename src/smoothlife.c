@@ -19,8 +19,13 @@
 
 #define FONT_SIZE 52
 #define BACKGROUND_COLOR ColorFromHSV(120, 1.0, 1 - 0.95)
-#define RENDER_WIDTH (1920)
-#define RENDER_HEIGHT (1080)
+#ifdef INSTAGRAM_
+    #define RENDER_WIDTH (1920)
+    #define RENDER_HEIGHT (1080)
+#else
+    #define RENDER_HEIGHT (1920)
+    #define RENDER_WIDTH (1080)
+#endif // INSTAGRAM_
 #define TEXTURE_WIDTH (RENDER_WIDTH / 2)
 #define TEXTURE_HEIGHT (RENDER_HEIGHT / 2)
 #define DELTA_TIME (0.5f)

@@ -109,11 +109,12 @@ void plug_update(float dt, float w, float h) {
 
     DrawRectangle(0, 0, w, h, WHITE);
     EndShaderMode();
-    const char *text = "Imagination is more important than knowledge. For knowledge is limited, whereas imagination embraces the entire world.” — Albert Einstein";
+    // const char *text = "Imagination is more important than knowledge. For knowledge is limited, whereas imagination embraces the entire world.” — Albert Einstein";
+    const char *text = "Everything is judged by its appearance; what is unseen counts for nothing. Never let yourself get lost in the crowd or buried in oblivion. Stand out. Be conspicuous, at all cost! Make yourself a magnet of attention by appearing larger, more colorful, more mysterious, than the bland and timid masses. ";
     
     float maxWidth = w * 0.8f;
     float textX = w * 0.1f;
-    float textY = h * 0.3f;
+    float textY = h * 0.1f;
     Rectangle bounds = { textX, textY, maxWidth, h };
     
     DrawWrappedText(p->font, text, bounds, FONT_SIZE, 1.0f, BLACK);

@@ -11,8 +11,13 @@
 #include "plug.h"
 #include "ffmpeg.h"
 
-#define FFMPEG_VIDEO_WIDTH (1920*2)
-#define FFMPEG_VIDEO_HEIGHT (1080*2)
+#ifdef INSTAGRAM_
+    #define FFMPEG_VIDEO_WIDTH (1920*2)
+    #define FFMPEG_VIDEO_HEIGHT (1080*2)
+#else
+    #define FFMPEG_VIDEO_WIDTH (1080)
+    #define FFMPEG_VIDEO_HEIGHT (1920)
+#endif // INSTAGRAM_
 #define FFMPEG_VIDEO_FPS 60
 #define FFMPEG_VIDEO_DELTA_TIME (1.0f/FFMPEG_VIDEO_FPS)
 #define RENDERING_FONT_SIZE 78

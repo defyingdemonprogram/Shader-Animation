@@ -6,6 +6,7 @@
 
 void cc(Nob_Cmd *cmd) {
     nob_cmd_append(cmd, "cc");
+	nob_cmd_append(cmd, "-DINSTAGRAM_");
     nob_cmd_append(cmd, "-Wall", "-Wextra", "-ggdb");
     nob_cmd_append(cmd, "-I./raylib/raylib-5.5_linux_amd64/include");
 }

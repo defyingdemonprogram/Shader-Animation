@@ -163,37 +163,52 @@ void plug_update(float dt, float w, float h, bool  render) {
     }
 
     // Info/Logo logic
-    if (!render) {
-        p->info.fontSize = FONT_SIZE / 2;
-        p->info.padding = 10;
-        p->info.textBounds = (Rectangle){
-            .x = w - 400 - p->info.padding,
-            .y = h - 100 - p->info.padding + FONT_SIZE,
-            .width = 400,
-            .height = 100
+    float padding;
+    float font_size;
+    Rectangle logoBounds;
+    // TODO(realsanjeev): Use the minimum of the w and h to calculate padding and font_size
+    if (render) {
+        padding = w / 108;
+        logoBounds = (Rectangle){
+            .x = w - w / 2.9 - padding,
+            .y = h - h / 17 - padding,
+            .width = w / 2.7,
+            .height = h / 17
         };
+        font_size = (w / 33);
     } else {
-        p->info.fontSize = w / 35;
-        p->info.padding = w / 192;
-        p->info.textBounds = (Rectangle){
-            .x = w - w / 4 - p->info.padding,
-            .y = h - h / 11 - p->info.padding,
-            .width = w / 4,
-            .height = h / 11
+        w = GetScreenWidth();
+        h = GetScreenHeight();
+        padding = w / 108;
+
+        logoBounds = (Rectangle){
+            .x = w - w / 2.9 - padding,
+            .y = h - h / 17 - padding,
+            .width = w / 2.7,
+            .height = h / 17
         };
+        font_size = (w / 40);
     }
 
     BeginShaderMode(p->info.shader);
-        float infoResolution[2] = { (float)p->info.textBounds.width, (float)p->info.textBounds.height };
-        float origin[2] = { (float)(p->info.textBounds.x + p->info.textBounds.height + FONT_SIZE), (float)(h - (p->info.textBounds.y + p->info.textBounds.height - FONT_SIZE)) };
+        float logoResolution[2] = {logoBounds.width, logoBounds.height};
+        float origin[2] = {logoBounds.x + logoBounds.height, h - (logoBounds.y + logoBounds.height)};
 
         SetShaderValue(p->info.shader, p->info.timeLoc, &p->time, SHADER_UNIFORM_FLOAT);
-        SetShaderValue(p->info.shader, p->info.resolutionLoc, infoResolution, SHADER_UNIFORM_VEC2);
+        SetShaderValue(p->info.shader, p->info.resolutionLoc, logoResolution, SHADER_UNIFORM_VEC2);
         SetShaderValue(p->info.shader, p->info.originLoc, origin, SHADER_UNIFORM_VEC2);
-        DrawRectangleRec(p->info.textBounds, BLANK);
+        DrawRectangleRec(logoBounds, BLANK);
     EndShaderMode();
 
-    DrawWrappedText(p->font, p->info.text, p->info.textBounds, p->info.fontSize, 2, RAYWHITE);
+    // Draw overlay text
+    // Change the logoBounds location to align with loGo
+    Rectangle textBounds = {
+        .x = logoBounds.x - padding*3,
+        .y = logoBounds.y + font_size,
+        .width = logoBounds.width,
+        .height = logoBounds.height
+    };
+    DrawWrappedText(p->font, p->info.text, textBounds, font_size, 2, RAYWHITE);
 }
 
 bool plug_finished(void) {

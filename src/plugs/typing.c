@@ -30,6 +30,7 @@ typedef struct {
     Shader shader;
     float time;
     int timeLoc;
+    int resolutionLoc;
     size_t size;
 
     Info info;
@@ -39,8 +40,9 @@ static Plug *p = NULL;
 
 static void load_resources(void) {
     p->font = LoadFontEx("./assets/fonts/iosevka-regular.ttf", FONT_SIZE, NULL, 0);
-    p->shader = LoadShader(0, "./assets/shaders/example.fs");
+    p->shader = LoadShader(0, "./assets/shaders/hash_without_sine.fs");
     p->timeLoc = GetShaderLocation(p->shader, "u_time");
+    p->resolutionLoc = GetShaderLocation(p->shader, "u_resolution");
 
 
     // Load the shader for logo rendering
@@ -137,11 +139,11 @@ void plug_update(float dt, float w, float h, bool  render) {
     BeginShaderMode(p->shader);
         float resolution[2] = { w, h };
         SetShaderValue(p->shader, p->timeLoc, &p->time, SHADER_UNIFORM_FLOAT);
-        // Only if u_resolution is present in example.fs, but let's assume it might be or just use time
+        SetShaderValue(p->shader, p->resolutionLoc, resolution, SHADER_UNIFORM_VEC2);
         DrawRectangle(0, 0, (int)w, (int)h, WHITE);
     EndShaderMode();
 
-    const char *fullText = "Everything is judged by its appearance; what is unseen counts for nothing. Never let yourself get lost in the crowd or buried in oblivion. Stand out. Be conspicuous, at all cost! Make yourself a magnet of attention by appearing larger, more colorful, more mysterious, than the bland and timid masses.";
+    const char *fullText = "Everything is judged by its appearance; what is unseen counts for nothing. Never let yourself get lost in the crowd or buried in oblivion. Stand out. Be conspicuous, at all cost! Make yourself a magnet of attention by appearing larger, more colorful, more mysterious, than the bland and timid masses.\n\n\n- Robert Greene, The 48 Laws of Power";
     
     // Typing effect logic
     int totalLen = strlen(fullText);

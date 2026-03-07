@@ -172,19 +172,19 @@ void plug_update(float dt, float w, float h, bool  render) {
     if (render) {
         padding = w / 108;
         logoBounds = (Rectangle){
-            .x = w - w / 2.9 - padding,
+            .x = w - w / 2.5 - padding,
             .y = h - h / 17 - padding,
-            .width = w / 2.7,
+            .width = w / 2.3,
             .height = h / 17
         };
-        font_size = (w / 33);
+        font_size = (w / 30);
     } else {
         w = GetScreenWidth();
         h = GetScreenHeight();
         padding = w / 108;
 
         logoBounds = (Rectangle){
-            .x = w - w / 2.9 - padding,
+            .x = w - w / 2.7 - padding,
             .y = h - h / 17 - padding,
             .width = w / 2.7,
             .height = h / 17

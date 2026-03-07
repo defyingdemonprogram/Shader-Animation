@@ -183,8 +183,8 @@ int main(int argc, char **argv) {
                     }
 
                     if (IsKeyPressed(KEY_S)) {
-                        TakeScreenshot("screenshots/shader_screenshot.png");
-                        TraceLog(LOG_INFO, "Shader screensshot saved as screenshots/shader_screenshot.png");
+                        TakeScreenshot("shader_screenshot.png");
+                        TraceLog(LOG_INFO, "Shader screensshot saved as shader_screenshot.png");
                     }
 
                     if (IsKeyPressed(KEY_C)) {
